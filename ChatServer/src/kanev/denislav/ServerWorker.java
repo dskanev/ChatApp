@@ -52,6 +52,8 @@ public class ServerWorker extends Thread {
                     handleMessage(tokensMessage);
                 } else if("join".equalsIgnoreCase(cmd)) {
                     handleJoin(tokens);
+                } else if ("leave".equalsIgnoreCase(cmd)){
+                    handleLeave(tokens);
                 } else {
                     String msg = "unknown " + cmd + System.lineSeparator();
                     outputStream.write(msg.getBytes());
@@ -60,6 +62,13 @@ public class ServerWorker extends Thread {
         }
 
         clientSocket.close();
+    }
+
+    private void handleLeave(String[] tokens) {
+        if (tokens.length > 1) {
+            String topic = tokens [1];
+            topicSet.remove(topic);
+        }
     }
 
     public boolean isMemberOfTopic(String topic) {

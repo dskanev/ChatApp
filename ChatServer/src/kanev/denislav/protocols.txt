@@ -25,5 +25,6 @@ Commands:
 
     #topic <-- chatroom / group chat
     join #topic
+    leave #topic
     send: message #topic messageBody
     receive: message #topic:<login> messageBody
