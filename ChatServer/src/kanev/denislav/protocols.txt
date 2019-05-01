@@ -18,3 +18,7 @@ Commands:
 
     login <user> <password>
     logoff
+
+    message <user> messageBody
+    guest: "message jim Hello!" <-- sent
+    jim: "message guest Hello" <-- receive

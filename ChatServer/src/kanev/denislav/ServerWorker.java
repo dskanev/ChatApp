@@ -44,6 +44,11 @@ public class ServerWorker extends Thread {
                     break;
                 }else if("login".equalsIgnoreCase(cmd)) {
                     handleLogin(outputStream, tokens);
+
+                } else if("message".equalsIgnoreCase(cmd)) {
+                    String[] tokensMessage = line.split(" ",3);
+                    handleMessage(tokensMessage);
+
                 } else {
                     String msg = "unknown " + cmd + System.lineSeparator();
                     outputStream.write(msg.getBytes());
@@ -53,8 +58,22 @@ public class ServerWorker extends Thread {
 
         clientSocket.close();
     }
+    //format: "message" "login" message...
+    private void handleMessage(String[] tokens) throws IOException {
+        String sendTo = tokens[1];
+        String messageBody = tokens[2];
+
+        List<ServerWorker> workerList = server.getWorkerList();
+        for(ServerWorker worker : workerList){
+            if(sendTo.equalsIgnoreCase(worker.getLogin())) {
+                String outboundMessage = "message " + login + " " + messageBody + System.lineSeparator();
+                worker.send(outboundMessage);
+            }
+        }
+    }
 
     private void handleLogoff() throws IOException {
+        server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
 
         // send other online users current user's status
